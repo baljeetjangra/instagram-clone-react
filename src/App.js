@@ -9,7 +9,12 @@ function App() {
 
   useEffect(() => {
     db.collection("posts").onSnapshot((snapshot) =>
-      setPosts(snapshot.doc.map((doc) => doc.data()))
+      setPosts(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          post: doc.data(),
+        }))
+      )
     );
   }, []);
 
@@ -18,10 +23,14 @@ function App() {
       <div className="app__header">
         <img className="app__headerImage" src={instagram} alt="" />
       </div>
-      <Post username="" caption="" imageUrl="" />
-      <Post />
-      <Post />
-      <Post />
+      {posts.map(({ id, post }) => (
+        <Post
+          key={id}
+          username={post.username}
+          caption={post.caption}
+          imageUrl={post.imageUrl}
+        />
+      ))}
     </div>
   );
 }
